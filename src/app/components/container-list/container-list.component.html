@@ -1,0 +1,45 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Docker Container Manager</h2>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let container of containers">
+                    <td>{{ truncateId(container?.Id ?? '') }}</td>
+                    <td>{{ container?.Names?.[0]?.replace('/', '') || 'No name' }}</td>
+                    <td>{{ container?.Image || 'Unknown image' }}</td>
+                    <td [class]="getStatusClass(container?.State || '')">
+                        {{ container?.Status || 'Status unknown' }}
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-success btn-sm" (click)="performAction('start', container.Id)"
+                                [disabled]="container.State === 'running'">
+                                <i class="bi bi-play-fill"></i> Start
+                            </button>
+                            <button class="btn btn-danger btn-sm" (click)="performAction('stop', container.Id)"
+                                [disabled]="container.State !== 'running'">
+                                <i class="bi bi-stop-fill"></i> Stop
+                            </button>
+                            <button class="btn btn-warning btn-sm" (click)="performAction('restart', container.Id)"
+                                [disabled]="container.State !== 'running'">
+                                <i class="bi bi-arrow-repeat"></i> Restart
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
